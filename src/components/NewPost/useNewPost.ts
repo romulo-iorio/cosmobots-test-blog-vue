@@ -4,7 +4,7 @@ import type { Post, CreatePostData } from '@/interfaces'
 import type { Dispatch } from '@/states'
 
 import { useState } from '@/states'
-import { api } from '@/api'
+import { api } from '@/services/api'
 
 export interface Props {
   setPosts: Dispatch<Post[]>

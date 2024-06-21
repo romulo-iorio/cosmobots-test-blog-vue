@@ -2,11 +2,9 @@ import axios from 'axios'
 
 import { tokenStorage } from '@/storage'
 
-import type { PostApi } from './posts'
-import { makePostsApi } from './posts'
-
 interface HttpResponse<T> {
   data: T
+  headers: Record<string, string>
 }
 
 export interface HttpClient {
@@ -17,7 +15,7 @@ export interface HttpClient {
   delete: <T>(url: string) => Promise<HttpResponse<T>>
 }
 
-const httpClient = axios.create({
+export const httpClient = axios.create({
   baseURL: 'http://localhost:3000',
   headers: {
     'Content-Type': 'application/json',
@@ -25,10 +23,19 @@ const httpClient = axios.create({
   }
 })
 
-interface API {
-  posts: PostApi
-}
+httpClient.interceptors.request.use((config) => {
+  config.headers.Authorization = 'Bearer ' + tokenStorage.get()
+  return config
+})
 
-export const api: API = {
-  posts: makePostsApi(httpClient)
-}
+httpClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      tokenStorage.remove()
+      window.location.reload()
+    }
+
+    return Promise.reject(error)
+  }
+)

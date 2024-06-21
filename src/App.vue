@@ -1,43 +1,17 @@
 <script setup lang="ts">
-import type { Post } from './interfaces'
-import { useState } from './states'
-import { api } from './api'
+import { tokenStorage } from '@/storage'
 
-import CreateNewPostButton from './components/CreateNewPostButton.vue'
-import PostDisplay from './components/PostDisplay/PostDisplay.vue'
-import NewPost from './components/NewPost/NewPost.vue'
+import LoginArea from './components/LoginArea/LoginArea.vue'
+import PostsArea from './components/PostsArea.vue'
 
-const [showCreateNewPost, setShowCreateNewPost] = useState(false)
-const [posts, setPosts] = useState<Post[]>([])
-
-api.posts
-  .get()
-  .then((data) =>
-    setPosts(
-      data.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-    )
-  )
+const token = tokenStorage.get()
 </script>
 
 <template>
   <div class="flex flex-col w-full items-center justify-start h-[100vh]">
-    <CreateNewPostButton v-if="!showCreateNewPost" @create-new-post="setShowCreateNewPost(true)" />
+    <PostsArea v-if="token" />
 
-    <NewPost v-if="showCreateNewPost" :setPosts="setPosts" @close="setShowCreateNewPost(false)" />
-
-    <hr class="w-full border-t-1 border-gray-300/50 my-2" />
-
-    <div
-      class="flex flex-col gap-4 w-full p-10 overflow-y-auto flex-1 h-auto transition-height duration-200"
-    >
-      <div v-if="posts.length === 0">
-        <h1 class="text-white text-2xl font-bold text-center">Nenhuma postagem encontrada</h1>
-      </div>
-
-      <div v-if="posts.length > 0" class="flex flex-col gap-5 w-full">
-        <PostDisplay v-for="post in posts" :key="post.id" :post="post" :setPosts="setPosts" />
-      </div>
-    </div>
+    <LoginArea v-else />
   </div>
 </template>
 

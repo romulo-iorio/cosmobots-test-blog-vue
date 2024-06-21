@@ -1,5 +1,5 @@
 import type { CreatePostData, Post } from '@/interfaces'
-import type { HttpClient } from '.'
+import type { HttpClient } from '../httpClient'
 
 export interface PostApi {
   get: () => Promise<Post[]>
