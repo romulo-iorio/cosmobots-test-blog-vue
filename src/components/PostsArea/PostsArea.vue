@@ -1,32 +1,23 @@
 <script setup lang="ts">
-import type { Post } from '@/interfaces'
-// import { toast } from '@/services/toast'
-import { tokenStorage } from '@/storage'
-import { api } from '@/services/api/index'
-import { useState } from '@/states'
+import { faSignOut } from '@fortawesome/free-solid-svg-icons'
+import IconButton from '@/components/IconButton.vue'
+import CreateNewPostButton from '../CreateNewPostButton.vue'
+import PostDisplay from '../PostDisplay/PostDisplay.vue'
+import NewPost from '../NewPost/NewPost.vue'
 
-import CreateNewPostButton from './CreateNewPostButton.vue'
-import PostDisplay from './PostDisplay/PostDisplay.vue'
-import NewPost from './NewPost/NewPost.vue'
+import { usePostsArea } from './usePostsArea'
 
-const [showCreateNewPost, setShowCreateNewPost] = useState(false)
-const [posts, setPosts] = useState<Post[]>([])
-
-api.posts
-  .get()
-  .then((data) =>
-    setPosts(
-      data.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-    )
-  )
-  .catch((error) => {
-    console.error(error)
-    tokenStorage.remove()
-    window.location.href = '/'
-  })
+const { showCreateNewPost, setShowCreateNewPost, posts, setPosts, onLogout } = usePostsArea()
 </script>
 
 <template>
+  <IconButton
+    class="absolute top-6 right-6 opacity-50 hover:opacity-100"
+    :base-color="'red'"
+    :icon="faSignOut"
+    @click="onLogout"
+  />
+
   <CreateNewPostButton v-if="!showCreateNewPost" @create-new-post="setShowCreateNewPost(true)" />
 
   <NewPost v-if="showCreateNewPost" :setPosts="setPosts" @close="setShowCreateNewPost(false)" />

@@ -2,7 +2,7 @@
 import { tokenStorage } from '@/storage'
 
 import LoginArea from './components/LoginArea/LoginArea.vue'
-import PostsArea from './components/PostsArea.vue'
+import PostsArea from './components/PostsArea/PostsArea.vue'
 
 const token = tokenStorage.get()
 </script>
