@@ -3,6 +3,7 @@ import type { Post } from './interfaces'
 import { useState } from './states'
 import { api } from './api'
 
+import CreateNewPostButton from './components/CreateNewPostButton.vue'
 import PostDisplay from './components/PostDisplay.vue'
 import NewPost from './components/NewPost/NewPost.vue'
 
@@ -20,14 +21,7 @@ api.posts
 
 <template>
   <div class="flex flex-col w-full items-center justify-start h-[100vh]">
-    <div class="flex flex-col w-full p-10" v-if="!showCreateNewPost">
-      <button
-        class="bg-blue-500 text-white p-2 rounded-lg w-full hover:bg-blue-600 active:bg-blue-700 transition-height duration-200 disabled:bg-gray-500 disabled:cursor-not-allowed"
-        @click="setShowCreateNewPost(true)"
-      >
-        Criar nova postagem
-      </button>
-    </div>
+    <CreateNewPostButton v-if="!showCreateNewPost" @click="setShowCreateNewPost(true)" />
 
     <NewPost v-if="showCreateNewPost" :setPosts="setPosts" @close="setShowCreateNewPost(false)" />
 
