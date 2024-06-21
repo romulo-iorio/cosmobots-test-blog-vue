@@ -1,3 +1,4 @@
+import { useRouter } from 'vue-router'
 import { toast } from 'vue3-toastify'
 
 import { tokenStorage } from '@/storage'
@@ -9,6 +10,8 @@ export const useLogin = () => {
   const [email, setEmail] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
+  const router = useRouter()
+
   const submit = async (e: Event) => {
     e.preventDefault()
 
@@ -17,7 +20,7 @@ export const useLogin = () => {
     try {
       const token = await api.auth.signIn({ email: email.value, password: password.value })
       tokenStorage.set(token)
-      window.location.href = '/'
+      router.push({ name: 'home' })
     } catch (error) {
       console.error(error)
       toast.error('E-mail ou senha inválidos')

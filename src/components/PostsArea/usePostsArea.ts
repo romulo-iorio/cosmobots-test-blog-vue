@@ -1,3 +1,5 @@
+import { useRouter } from 'vue-router'
+
 import type { Post } from '@/interfaces'
 import { api } from '@/services/api/index'
 import { tokenStorage } from '@/storage'
@@ -6,6 +8,8 @@ import { useState } from '@/states'
 export const usePostsArea = () => {
   const [showCreateNewPost, setShowCreateNewPost] = useState(false)
   const [posts, setPosts] = useState<Post[]>([])
+
+  const router = useRouter()
 
   api.posts
     .get()
@@ -17,12 +21,12 @@ export const usePostsArea = () => {
     .catch((error) => {
       console.error(error)
       tokenStorage.remove()
-      window.location.href = '/'
+      router.push({ name: 'login' })
     })
 
   const onLogout = () => {
     tokenStorage.remove()
-    window.location.href = '/'
+    router.push({ name: 'login' })
   }
 
   return { showCreateNewPost, setShowCreateNewPost, posts, setPosts, onLogout }
