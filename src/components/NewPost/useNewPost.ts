@@ -1,8 +1,10 @@
-import type { Post, CreatePostData } from '../../interfaces'
-import type { Dispatch } from '../../states'
+import { toast } from 'vue3-toastify'
 
-import { useState } from '../../states'
-import { api } from '../../api'
+import type { Post, CreatePostData } from '@/interfaces'
+import type { Dispatch } from '@/states'
+
+import { useState } from '@/states'
+import { api } from '@/api'
 
 export interface Props {
   setPosts: Dispatch<Post[]>
@@ -40,12 +42,16 @@ export const useNewPost = ({ setPosts }: Props) => {
 
     setIsLoading(true)
 
-    const newPost = await api.posts.create(newPostData)
+    try {
+      const newPost = await api.posts.create(newPostData)
+
+      setPosts((prev) => [newPost, ...prev])
+    } catch (e) {
+      console.log(e)
+      toast.error('Erro ao criar post...')
+    }
 
     setIsLoading(false)
-
-    setPosts((prev) => [newPost, ...prev])
-
     resetForm()
   }
 

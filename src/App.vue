@@ -4,11 +4,11 @@ import { useState } from './states'
 import { api } from './api'
 
 import CreateNewPostButton from './components/CreateNewPostButton.vue'
-import PostDisplay from './components/PostDisplay.vue'
+import PostDisplay from './components/PostDisplay/PostDisplay.vue'
 import NewPost from './components/NewPost/NewPost.vue'
 
-const [posts, setPosts] = useState<Post[]>([])
 const [showCreateNewPost, setShowCreateNewPost] = useState(false)
+const [posts, setPosts] = useState<Post[]>([])
 
 api.posts
   .get()
@@ -21,7 +21,7 @@ api.posts
 
 <template>
   <div class="flex flex-col w-full items-center justify-start h-[100vh]">
-    <CreateNewPostButton v-if="!showCreateNewPost" @click="setShowCreateNewPost(true)" />
+    <CreateNewPostButton v-if="!showCreateNewPost" @create-new-post="setShowCreateNewPost(true)" />
 
     <NewPost v-if="showCreateNewPost" :setPosts="setPosts" @close="setShowCreateNewPost(false)" />
 
@@ -31,11 +31,11 @@ api.posts
       class="flex flex-col gap-4 w-full p-10 overflow-y-auto flex-1 h-auto transition-height duration-200"
     >
       <div v-if="posts.length === 0">
-        <h1 class="text-white text-2xl font-bold">Nenhuma postagem encontrada</h1>
+        <h1 class="text-white text-2xl font-bold text-center">Nenhuma postagem encontrada</h1>
       </div>
 
       <div v-if="posts.length > 0" class="flex flex-col gap-5 w-full">
-        <PostDisplay v-for="post in posts" :key="post.id" :post="post" />
+        <PostDisplay v-for="post in posts" :key="post.id" :post="post" :setPosts="setPosts" />
       </div>
     </div>
   </div>
