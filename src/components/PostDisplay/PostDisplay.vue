@@ -50,7 +50,7 @@ const { post } = props
     />
 
     <span>
-      <span class="text-gray-400 text-sm">Postado por {{ post.user_id }} em </span>
+      <span class="text-gray-400 text-sm italic">Postado por {{ post.user.email }} em </span>
       <span class="text-gray-400 text-sm">{{ formatDate(post.created_at) }}</span>
     </span>
 
