@@ -2,7 +2,11 @@ import axios from 'axios'
 
 import { tokenStorage } from '@/storage'
 
-interface HttpResponse<T> {
+export interface HttpError<T = any> extends Error {
+  response: { data: T }
+}
+
+export interface HttpResponse<T> {
   data: T
   headers: Record<string, string>
 }

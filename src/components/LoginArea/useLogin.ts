@@ -12,8 +12,20 @@ export const useLogin = () => {
 
   const router = useRouter()
 
+  const validateForm = () => {
+    if (password.value.length < 6) {
+      toast.error('A senha deve ter no mínimo 6 caracteres')
+      return false
+    }
+
+    return true
+  }
+
   const submit = async (e: Event) => {
     e.preventDefault()
+
+    const isValid = validateForm()
+    if (!isValid) return
 
     setIsLoading(true)
 
@@ -38,7 +50,7 @@ export const useLogin = () => {
     const target = e.target as HTMLInputElement
     setPassword(target.value)
   }
-
+  9
   const isDisabled = () => email.value === '' || password.value === ''
 
   return { email, password, isLoading, submit, onEmailChange, onPasswordChange, isDisabled }
