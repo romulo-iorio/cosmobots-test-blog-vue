@@ -11,6 +11,7 @@ interface CreateUserAuthData extends UserAuthData {
 
 export interface AuthApi {
   signUp: (auth: CreateUserAuthData) => Promise<string>
+  forgotPassword: (email: string) => Promise<void>
   signIn: (auth: UserAuthData) => Promise<string>
 }
 
@@ -29,5 +30,8 @@ export const makeAuthApi: AuthApiFactory = (httpClient) => ({
   signUp: async (user: CreateUserAuthData) => {
     const response = await httpClient.post('/users', { user })
     return getTokenFromResponse(response)
+  },
+  forgotPassword: async (email: string) => {
+    await httpClient.post('/users/password', { user: { email } })
   }
 })
