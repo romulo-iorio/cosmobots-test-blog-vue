@@ -9,7 +9,14 @@ interface CreateUserAuthData extends UserAuthData {
   password_confirmation: string
 }
 
+interface ResetPasswordData {
+  password: string
+  password_confirmation: string
+  reset_password_token: string
+}
+
 export interface AuthApi {
+  resetPassword: (data: ResetPasswordData) => Promise<void>
   signUp: (auth: CreateUserAuthData) => Promise<string>
   forgotPassword: (email: string) => Promise<void>
   signIn: (auth: UserAuthData) => Promise<string>
@@ -33,5 +40,8 @@ export const makeAuthApi: AuthApiFactory = (httpClient) => ({
   },
   forgotPassword: async (email: string) => {
     await httpClient.post('/users/password', { user: { email } })
+  },
+  resetPassword: async (data: ResetPasswordData) => {
+    await httpClient.patch('/users/password', { user: data })
   }
 })
