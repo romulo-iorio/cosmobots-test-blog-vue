@@ -1,33 +1,21 @@
 import { useRouter } from 'vue-router'
 
 import type { Post } from '@/interfaces'
-import { api } from '@/services/api/index'
 import { tokenStorage } from '@/storage'
 import { useState } from '@/states'
+import { api } from '@/services/api'
 
 export const usePostsArea = () => {
   const [showCreateNewPost, setShowCreateNewPost] = useState(false)
   const [posts, setPosts] = useState<Post[]>([])
 
   const router = useRouter()
-
-  api.posts
-    .get()
-    .then((data) =>
-      setPosts(
-        data.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-      )
-    )
-    .catch((error) => {
-      console.error(error)
-      tokenStorage.remove()
-      router.push({ name: 'login' })
-    })
+  api.posts.get().then((data) => setPosts(data.sort((a, b) => b.id - a.id)))
 
   const onLogout = () => {
     tokenStorage.remove()
     router.push({ name: 'login' })
   }
 
-  return { showCreateNewPost, setShowCreateNewPost, posts, setPosts, onLogout }
+  return { setShowCreateNewPost, showCreateNewPost, onLogout, posts }
 }

@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import type { Props } from './useNewPost'
 import { useNewPost } from './useNewPost'
 
-const props = defineProps<Props>()
+const emit = defineEmits(['add-post', 'close'])
 
 const { title, content, isLoading, onChangeTitle, onChangeContent, createPost, isDisabled } =
-  useNewPost(props)
+  useNewPost(emit)
 </script>
 
 <template>

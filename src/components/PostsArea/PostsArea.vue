@@ -1,13 +1,27 @@
 <script setup lang="ts">
 import { faSignOut } from '@fortawesome/free-solid-svg-icons'
+
+import type { Post } from '@/interfaces'
 import IconButton from '@/components/IconButton.vue'
+
+import { usePostsArea } from './usePostsArea'
 import CreateNewPostButton from '../CreateNewPostButton.vue'
 import PostDisplay from '../PostDisplay/PostDisplay.vue'
 import NewPost from '../NewPost/NewPost.vue'
 
-import { usePostsArea } from './usePostsArea'
+const { showCreateNewPost, setShowCreateNewPost, posts, onLogout } = usePostsArea()
+console.log(posts)
 
-const { showCreateNewPost, setShowCreateNewPost, posts, setPosts, onLogout } = usePostsArea()
+const onAddPost = (post: Post) => posts.value.push(post)
+const onDeletePost = (id: number) => {
+  posts.value = posts.value.filter((post) => post.id !== id)
+}
+const onUpdatePost = (post: Post) => {
+  posts.value = posts.value.map((p) => {
+    if (p.id === post.id) return { ...p, ...post }
+    return p
+  })
+}
 </script>
 
 <template>
@@ -20,7 +34,7 @@ const { showCreateNewPost, setShowCreateNewPost, posts, setPosts, onLogout } = u
 
   <CreateNewPostButton v-if="!showCreateNewPost" @create-new-post="setShowCreateNewPost(true)" />
 
-  <NewPost v-if="showCreateNewPost" :setPosts="setPosts" @close="setShowCreateNewPost(false)" />
+  <NewPost v-if="showCreateNewPost" @close="setShowCreateNewPost(false)" @add-post="onAddPost" />
 
   <hr class="w-full border-t-1 border-gray-300/50 my-2" />
 
@@ -32,7 +46,13 @@ const { showCreateNewPost, setShowCreateNewPost, posts, setPosts, onLogout } = u
     </div>
 
     <div v-if="posts.length > 0" class="flex flex-col gap-5 w-full">
-      <PostDisplay v-for="post in posts" :key="post.id" :post="post" :setPosts="setPosts" />
+      <PostDisplay
+        @delete-post="onDeletePost"
+        @update-post="onUpdatePost"
+        v-for="post in posts"
+        :key="post.id"
+        :post="post"
+      />
     </div>
   </div>
 </template>

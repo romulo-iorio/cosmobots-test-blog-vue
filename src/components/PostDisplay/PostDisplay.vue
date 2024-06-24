@@ -1,13 +1,16 @@
 <script setup lang="ts">
 import { faTrash, faPencil, faCheck, faX } from '@fortawesome/free-solid-svg-icons'
+import { defineProps, computed, watchEffect } from 'vue'
 
 import { formatDate } from '@/utils'
 import CommentsSection from '@/components/CommentsSection/CommentsSection.vue'
+import PostVoteButton from '@/components/PostVoteButton/PostVoteButton.vue'
 import IconButton from '@/components/IconButton.vue'
 
 import type { Props } from './usePostDisplay'
 import { usePostDisplay } from './usePostDisplay'
 
+const emit = defineEmits(['delete-post', 'update-post'])
 const props = defineProps<Props>()
 const {
   hovered,
@@ -19,10 +22,14 @@ const {
   newContent,
   newTitle,
   onChangeContent,
-  onChangeTitle,
-  post
-} = usePostDisplay(props)
-const { setPosts } = props
+  onChangeTitle
+} = usePostDisplay(props, emit)
+
+const post = computed(() => props.post)
+
+watchEffect(() => {
+  console.log(post.value)
+})
 </script>
 
 <template>
@@ -57,7 +64,7 @@ const { setPosts } = props
       <span class="text-gray-400 text-sm">{{ formatDate(post.created_at) }}</span>
     </span>
 
-    <CommentsSection :post="post" />
+    <CommentsSection :post="post" @update-post="$emit('update-post', $event)" />
 
     <div class="absolute top-4 right-4 flex gap-4" v-if="hovered">
       <IconButton :base-color="'green'" @click="onEdit" v-if="isEditing" :icon="faCheck" />

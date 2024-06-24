@@ -1,16 +1,13 @@
 import { toast } from 'vue3-toastify'
 
-import type { Post, CreatePostData } from '@/interfaces'
-import type { Dispatch } from '@/states'
+import type { CreatePostData } from '@/interfaces'
 
 import { useState } from '@/states'
 import { api } from '@/services/api'
 
-export interface Props {
-  setPosts: Dispatch<Post[]>
-}
+export type EventTypes = 'add-post' | 'close'
 
-export const useNewPost = ({ setPosts }: Props) => {
+export const useNewPost = (emit: (event: EventTypes, ...args: any[]) => void) => {
   const [content, setContent] = useState('')
   const [title, setTitle] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -44,8 +41,7 @@ export const useNewPost = ({ setPosts }: Props) => {
 
     try {
       const newPost = await api.posts.create(newPostData)
-
-      setPosts((prev) => [newPost, ...prev])
+      emit('add-post', newPost)
     } catch (e) {
       console.error(e)
       toast.error('Erro ao criar post...')

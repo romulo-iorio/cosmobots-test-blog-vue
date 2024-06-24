@@ -1,4 +1,4 @@
-import type { CreatePostData, Post } from '@/interfaces'
+import type { CreatePostData, LikeOrDislike, Post } from '@/interfaces'
 import type { HttpClient } from '../httpClient'
 
 export interface PostApi {
@@ -7,6 +7,8 @@ export interface PostApi {
   create: (post: CreatePostData) => Promise<Post>
   update: (post: Partial<Post>) => Promise<Post>
   delete: (id: number) => Promise<void>
+  like: (id: number) => Promise<LikeOrDislike>
+  dislike: (id: number) => Promise<LikeOrDislike>
 }
 
 type PostsApiFactory = (httpClient: HttpClient) => PostApi
@@ -38,5 +40,13 @@ export const makePostsApi: PostsApiFactory = (httpClient) => ({
   },
   delete: async (id: number) => {
     await httpClient.delete<void>(`/posts/${id}`)
+  },
+  like: async (id: number): Promise<LikeOrDislike> => {
+    const response = await httpClient.patch<LikeOrDislike>(`/posts/${id}/like`)
+    return response.data
+  },
+  dislike: async (id: number): Promise<LikeOrDislike> => {
+    const response = await httpClient.patch<LikeOrDislike>(`/posts/${id}/dislike`)
+    return response.data
   }
 })
