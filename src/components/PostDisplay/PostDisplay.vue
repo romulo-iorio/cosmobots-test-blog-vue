@@ -22,7 +22,8 @@ const {
   newContent,
   newTitle,
   onChangeContent,
-  onChangeTitle
+  onChangeTitle,
+  loggedUserCanChangePost
 } = usePostDisplay(props, emit)
 
 const post = computed(() => props.post)
@@ -66,7 +67,7 @@ watchEffect(() => {
 
     <CommentsSection :post="post" @update-post="$emit('update-post', $event)" />
 
-    <div class="absolute top-4 right-4 flex gap-4" v-if="hovered">
+    <div class="absolute top-4 right-4 flex gap-4" v-if="hovered && loggedUserCanChangePost()">
       <IconButton :base-color="'green'" @click="onEdit" v-if="isEditing" :icon="faCheck" />
 
       <IconButton @click="setIsEditing(false)" :base-color="'red'" v-if="isEditing" :icon="faX" />

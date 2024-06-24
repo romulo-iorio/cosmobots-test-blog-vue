@@ -4,6 +4,7 @@ import type { Post } from '@/interfaces'
 
 import { api } from '@/services/api'
 import { useState } from '@/states'
+import { getLoggedUserId } from '@/utils'
 
 export interface Props {
   post: Post
@@ -55,6 +56,10 @@ export const usePostDisplay = (
     setNewContent(target.value)
   }
 
+  const loggedUserCanChangePost = () => {
+    return `${getLoggedUserId()}` === `${post.user_id}`
+  }
+
   return {
     hovered,
     setHovered,
@@ -65,6 +70,7 @@ export const usePostDisplay = (
     newContent,
     newTitle,
     onChangeTitle,
-    onChangeContent
+    onChangeContent,
+    loggedUserCanChangePost
   }
 }

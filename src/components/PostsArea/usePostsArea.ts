@@ -17,5 +17,7 @@ export const usePostsArea = () => {
     router.push({ name: 'login' })
   }
 
+  if (!tokenStorage.get()) router.push({ name: 'login' })
+
   return { setShowCreateNewPost, showCreateNewPost, onLogout, posts }
 }

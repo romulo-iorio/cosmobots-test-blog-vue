@@ -3,6 +3,7 @@ import { toast } from 'vue3-toastify'
 import type { Comment } from '@/interfaces'
 import type { Dispatch } from '@/states'
 
+import { getLoggedUserId } from '@/utils'
 import { useState } from '@/states'
 import { api } from '@/services/api'
 
@@ -49,6 +50,10 @@ export const useComment = ({ setComments, comment }: Props) => {
     }
   }
 
+  const loggedUserCanChangeComment = () => {
+    return `${getLoggedUserId()}` === `${comment.user_id}`
+  }
+
   return {
     comment: commentState,
     newCommentValue,
@@ -58,6 +63,7 @@ export const useComment = ({ setComments, comment }: Props) => {
     isEditing,
     isHovered,
     onDelete,
-    onEdit
+    onEdit,
+    loggedUserCanChangeComment
   }
 }

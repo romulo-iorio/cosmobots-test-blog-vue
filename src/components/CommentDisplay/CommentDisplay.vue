@@ -18,7 +18,8 @@ const {
   isHovered,
   onChangeComment,
   newCommentValue,
-  comment
+  comment,
+  loggedUserCanChangeComment
 } = useComment(props)
 </script>
 
@@ -51,7 +52,7 @@ const {
 
     <div
       class="absolute top-1/2 transform -translate-y-1/2 right-2 flex gap-2 opacity-80"
-      v-if="isHovered"
+      v-if="isHovered && loggedUserCanChangeComment()"
     >
       <IconButton
         size="sm"

@@ -10,7 +10,6 @@ import PostDisplay from '../PostDisplay/PostDisplay.vue'
 import NewPost from '../NewPost/NewPost.vue'
 
 const { showCreateNewPost, setShowCreateNewPost, posts, onLogout } = usePostsArea()
-console.log(posts)
 
 const onAddPost = (post: Post) => posts.value.push(post)
 const onDeletePost = (id: number) => {
