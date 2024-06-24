@@ -12,12 +12,11 @@ export interface Props {
 }
 
 export const usePostDisplay = ({ setPosts, post }: Props) => {
-  const formatDate = (date: string) => new Date(date).toLocaleString('pt-BR')
-
   const [isEditing, setIsEditing] = useState(false)
   const [hovered, setHovered] = useState(false)
   const [newContent, setNewContent] = useState(post.content)
   const [newTitle, setNewTitle] = useState(post.title)
+  const [postState, setPost] = useState(post)
 
   const onDelete = async () => {
     try {
@@ -34,13 +33,17 @@ export const usePostDisplay = ({ setPosts, post }: Props) => {
 
     try {
       const updatedPost = await api.posts.update(newPost)
+
       setPosts((prev) =>
         prev.map((p) => {
           const isUpdatedPost = p.id === updatedPost.id
-          if (isUpdatedPost) return updatedPost
+          if (isUpdatedPost) return { ...p, ...updatedPost }
           return p
         })
       )
+      setPost((prev) => ({ ...prev, ...updatedPost }))
+
+      setIsEditing(false)
     } catch (e) {
       console.error(e)
       toast.error('Erro ao editar post...')
@@ -58,7 +61,6 @@ export const usePostDisplay = ({ setPosts, post }: Props) => {
   }
 
   return {
-    formatDate,
     hovered,
     setHovered,
     onDelete,
@@ -68,6 +70,7 @@ export const usePostDisplay = ({ setPosts, post }: Props) => {
     newContent,
     newTitle,
     onChangeTitle,
-    onChangeContent
+    onChangeContent,
+    post: postState
   }
 }

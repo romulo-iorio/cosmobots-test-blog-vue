@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { faTrash, faPencil, faCheck, faX } from '@fortawesome/free-solid-svg-icons'
 
+import { formatDate } from '@/utils'
+import CommentsSection from '@/components/CommentsSection/CommentsSection.vue'
 import IconButton from '@/components/IconButton.vue'
 
 import type { Props } from './usePostDisplay'
@@ -8,7 +10,6 @@ import { usePostDisplay } from './usePostDisplay'
 
 const props = defineProps<Props>()
 const {
-  formatDate,
   hovered,
   setHovered,
   onDelete,
@@ -18,14 +19,15 @@ const {
   newContent,
   newTitle,
   onChangeContent,
-  onChangeTitle
+  onChangeTitle,
+  post
 } = usePostDisplay(props)
-const { post } = props
+const { setPosts } = props
 </script>
 
 <template>
   <div
-    class="flex flex-col gap-4 w-full p-5 bg-gray-700 rounded-lg transition duration-200 hover:bg-gray-800 cursor-pointer relative"
+    class="flex flex-col gap-4 w-full p-5 bg-gray-700 rounded-lg transition duration-200 hover:bg-gray-600 relative"
     @mouseleave="setHovered(false)"
     @mouseover="setHovered(true)"
     :key="post.id"
@@ -54,6 +56,8 @@ const { post } = props
       <span class="text-gray-400 text-sm italic">Postado por {{ post.user.email }} em </span>
       <span class="text-gray-400 text-sm">{{ formatDate(post.created_at) }}</span>
     </span>
+
+    <CommentsSection :post="post" />
 
     <div class="absolute top-4 right-4 flex gap-4" v-if="hovered">
       <IconButton :base-color="'green'" @click="onEdit" v-if="isEditing" :icon="faCheck" />

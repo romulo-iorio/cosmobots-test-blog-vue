@@ -47,7 +47,7 @@ export const useNewPost = ({ setPosts }: Props) => {
 
       setPosts((prev) => [newPost, ...prev])
     } catch (e) {
-      console.log(e)
+      console.error(e)
       toast.error('Erro ao criar post...')
     }
 
